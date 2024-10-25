@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, FlatList, RefreshControl, StyleSheet, Text } from 'react-native';
+import { View, FlatList, RefreshControl, StyleSheet, Text, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNews, incrementPage, resetNews } from '../store/newsSlice';
 import { RootState } from '../store';
@@ -16,8 +16,9 @@ const NewsFeed: React.FC = () => {
   const { articles, loading, page, error } = useSelector((state: RootState) => state.news);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const articlesData = articles?.filter(item => item.source?.id) || [];
+
 
   useEffect(() => {
     dispatch(resetNews());
@@ -43,6 +44,11 @@ const NewsFeed: React.FC = () => {
     setHasMore(true);
   }, [dispatch]);
 
+  const articlesData = articles?.filter(item => 
+    item.source?.id && item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+  
+
   const renderItem = ({ item }: { item: any }) => <NewsItem article={item} />;
 
   return (
@@ -53,18 +59,28 @@ const NewsFeed: React.FC = () => {
       {loading && page === INITIAL_PAGE ? (
         <Loader />
       ) : (
-        <FlatList
-          data={articlesData}
-          showsVerticalScrollIndicator={false}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.url}
-          onEndReached={loadMore}
-          onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-          refreshControl={
-            <RefreshControl refreshing={loading && page === INITIAL_PAGE} onRefresh={onRefresh} />
-          }
-          ListFooterComponent={loadingMore ? <Loader />:null}
-        />
+        <>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search articles..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+
+          <FlatList
+            data={articlesData}
+            showsVerticalScrollIndicator={false}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.url}
+            onEndReached={loadMore}
+            onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
+            refreshControl={
+              <RefreshControl refreshing={loading && page === INITIAL_PAGE} onRefresh={onRefresh} />
+            }
+            ListFooterComponent={loadingMore ? <Loader /> : null}
+          />
+        </>
+
       )}
     </View>
   );
@@ -81,6 +97,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: wp(2),
     fontSize: fontScale(16),
+  },
+  searchInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    margin: wp(2),
+    paddingHorizontal: wp(2),
   },
 });
 

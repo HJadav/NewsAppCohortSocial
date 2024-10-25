@@ -4,16 +4,23 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NewsFeed from '../screens/NewsFeed';
 import Bookmarks from '../screens/Bookmarks';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { fontScale, hp } from '../style/styles';
 import Colors from '../style/colours';
 
 const Tab = createBottomTabNavigator();
 
+const CustomHeader = ({ title }:any) => (
+  <View style={styles.headerContainer}>
+    <Text style={styles.headerTitle}>{title}</Text>
+  </View>
+);
+
 const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
+      
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
             let iconName;
@@ -30,10 +37,20 @@ const AppNavigator = () => {
           tabBarInactiveTintColor: Colors.LightGray, 
           tabBarStyle: styles.tabBar, 
           tabBarLabelStyle: styles.tabBarLabel, 
+          headerShown: true
+          
         })}
+        
       >
-        <Tab.Screen name="NewsFeed" component={NewsFeed} />
-        <Tab.Screen name="Bookmark" component={Bookmarks} />
+        <Tab.Screen name="NewsFeed" component={NewsFeed}
+        options={{
+          header: () => <CustomHeader title="News Feed" /> 
+        }}
+         />
+        <Tab.Screen name="Bookmark" component={Bookmarks} 
+         options={{
+          header: () => <CustomHeader title="Bookmarks" /> 
+        }} />
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -63,6 +80,18 @@ const styles = StyleSheet.create({
     fontSize: fontScale(16), 
     paddingBottom: 5, 
     fontWeight: 'bold', 
+  },
+  headerContainer: {
+    backgroundColor: Colors.White,
+    paddingVertical:hp(2),
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.Gainsboro,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: fontScale(18),
+    fontWeight: 'bold',
+    color: Colors.DarkGray,
   },
 });
 
