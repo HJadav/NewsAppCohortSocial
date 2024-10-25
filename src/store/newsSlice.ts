@@ -16,7 +16,7 @@ interface NewsState {
   page: number;
 }
 
-const API_KEY = 'f8024d7862d14a20b6ac1588b52626c5';
+const API_KEY = '1ddc631381694a15a3dcf838e0813821';
 const BASE_URL = 'https://newsapi.org/v2';
 
 export const fetchNews = createAsyncThunk<Article[], { category: string; page: number }>(
