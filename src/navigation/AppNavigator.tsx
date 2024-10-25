@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import NewsFeed from '../screens/NewsFeed';
 import Bookmarks from '../screens/Bookmarks';
 import { StyleSheet, Text, View } from 'react-native';
-import { fontScale, hp } from '../style/styles';
+import { fontScale, hp, wp } from '../style/styles';
 import Colors from '../style/colours';
 
 const Tab = createBottomTabNavigator();
@@ -31,7 +31,7 @@ const AppNavigator = () => {
               iconName = 'bookmark'; 
             }
 
-            return <Icon name={iconName as string} color={color} size={size} />;
+            return <Icon name={iconName as string} color={color} size={wp(5)} />;
           },
           tabBarActiveTintColor: Colors.Pink, 
           tabBarInactiveTintColor: Colors.LightGray, 
